@@ -27,7 +27,7 @@ while True:
         event_time=datetime.datetime.fromtimestamp(int(timestamp)/1000000)
 
         with  open(log_file, 'a') as f:
-            log_line = event_time.strftime("%b %d %T") + " " + server_host + " rds: " + operation + " " + username + " " + host + " " + database
+            log_line = event_time.strftime("%b %d %T") + " " + server_host + " rds: " + operation + " " + username + " " + host + " " + database + "\n"
             f.write(log_line)
     # if no more logs let's start next loop from date of last event
         last_event=timestamp
