@@ -1,0 +1,13 @@
+[Unit]
+Description=AWS RDS CloudWAtchLogs Auditlog reader and parser
+After=network.target
+[Service]
+StartLimitInterval=0
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/usr/bin/env python3 /usr/local/scripts/cloudWatchLogsReader/rdsAuthLogsParser.py
+
+[Install]
+WantedBy=multi-user.target
