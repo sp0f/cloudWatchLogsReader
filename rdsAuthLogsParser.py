@@ -12,8 +12,8 @@ kwargs = {
     'logGroupName': log_group,
     'limit': 10000,
     'startTime' : int(now.timestamp()*1000),
-    # 'filterPattern': '?FAILED_CONNECT ?CONNECT'
-    'filterPattern': 'CONNECT' # match CONNECT, DISCONNECT and FAILED_CONNECT
+    'filterPattern': '?FAILED_CONNECT ?CONNECT'
+    #'filterPattern': 'CONNECT' # match CONNECT, DISCONNECT and FAILED_CONNECT
 }
 
 last_event=None
