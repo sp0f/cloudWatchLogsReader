@@ -21,17 +21,19 @@ last_event=None
 # read logs in infinite loop
 while True:
     resp = client.filter_log_events(**kwargs)
-    for event in resp['events']:
-        # 1536652826127350,dv-mysql,alyjak,192.168.169.108,8426327,0,FAILED_CONNECT,,,1045
-        timestamp, server_host, username, host, connection_id, query_id, operation, database, obj, retcode  = event['message'].split(",")
-        event_time=datetime.datetime.fromtimestamp(int(timestamp)/1000000)
-
-        with  open(log_file, 'a') as f:
+    with  open(log_file, 'w') as f:
+        for event in resp['events']:
+            # 1536652826127350,dv-mysql,alyjak,192.168.169.108,8426327,0,FAILED_CONNECT,,,1045
+            timestamp, server_host, username, host, connection_id, query_id, operation, database, obj, retcode  = event['message'].split(",")
+            event_time=datetime.datetime.fromtimestamp(int(timestamp)/1000000)
             log_line = event_time.strftime("%b %d %T") + " " + server_host + " rds: " + operation + " " + username + " " + host + " " + database + "\n"
             f.write(log_line)
-            f.close()
-    # if no more logs let's start next loop from date of last event
-        last_event=timestamp
+            # if no more logs let's start next loop from date of last event
+            if last_event is None:
+                last_event = timestamp
+            elif last_event<timestamp:
+                last_event=timestamp
+    f.close()
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
