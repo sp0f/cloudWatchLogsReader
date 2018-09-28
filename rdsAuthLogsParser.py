@@ -33,7 +33,7 @@ while True:
             last_event = timestamp
         elif last_event<timestamp:
             last_event=timestamp
-    f.close()
+        f.close()
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
