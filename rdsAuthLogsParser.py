@@ -14,6 +14,7 @@ now=datetime.datetime.now(datetime.timezone.utc)
 
 kwargs = {
     'logGroupName': log_group,
+    'logStreamNamePrefix'='dv-mysql.audit.log',
     'limit': 10000,
     'startTime' : None,
     'filterPattern': '?FAILED_CONNECT ?CONNECT',
