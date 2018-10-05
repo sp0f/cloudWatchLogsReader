@@ -57,6 +57,7 @@ while True:
             print("ERROR: can't write data to log file. Exiting")
             # with open(last_event_file,'w') as f_event:
             #     f.write(last_event)
+            raise
             f.close()
             exit(1)
     try:
