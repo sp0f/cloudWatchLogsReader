@@ -17,7 +17,7 @@ kwargs = {
     'limit': 10000,
     #'startTime' : None,
     'filterPattern': '?FAILED_CONNECT ?CONNECT',
-    'interleaved': True
+    #'interleaved': True
 }
 if (path.exists(last_event_file)):
     print("Reading last event from lock file")
