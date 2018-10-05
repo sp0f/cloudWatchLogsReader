@@ -16,7 +16,7 @@ kwargs = {
     'logGroupName': log_group,
     'logStreamNamePrefix': 'dv-mysql.audit.log',
     'limit': 10000,
-    'startTime' : None,
+    #'startTime' : None,
     'filterPattern': '?FAILED_CONNECT ?CONNECT',
     'interleaved': True
 }
