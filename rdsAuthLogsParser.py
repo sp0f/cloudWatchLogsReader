@@ -19,7 +19,7 @@ kwargs = {
     'interleaved': True
 }
 
-last_event=int(now.timestamp()*1000)
+last_event=int(now.timestamp()*1000000)
 # if (path.exists(last_event_file)):
 #     print("Reading last event from lock file")
 #     tmp = f.readline()
