@@ -25,6 +25,7 @@ if (path.exists(last_event_file)):
 
 else:
     kwargs['startTime'] = int(now.timestamp()*1000)
+    last_event=str(kwargs['startTime'])
 
 
 # read logs in infinite loop
