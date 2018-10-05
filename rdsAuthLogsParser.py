@@ -16,23 +16,18 @@ kwargs = {
     'logGroupName': log_group,
     'limit': 10000,
     'logStreamNamePrefix': 'dv-mysql.audit.log',
-    'interleaved': True
 }
 
-last_event=int(now.timestamp()*1000000)
-# if (path.exists(last_event_file)):
-#     print("Reading last event from lock file")
-#     tmp = f.readline()
-#     last_event = tmp
-#     kwargs['startTime'] = int(last_event)+1
-#     os.remove(last_event_file)
-#
-# else:
-#     kwargs['startTime'] = int(now.timestamp()*1000000)
-#     last_event=str(kwargs['startTime'])
+if (path.exists(last_event_file)):
+    print("Reading last event from lock file")
+    tmp = f.readline()
+    last_event = tmp
+    kwargs['startTime'] = int(last_event)+1
+    os.remove(last_event_file)
 
-kwargs['startTime'] = last_event
-print("Start event timestamp: "+str(last_event))
+else:
+    kwargs['startTime'] = int(now.timestamp()*1000000)
+    last_event=kwargs['startTime']
 
 # read logs in infinite loop
 while True:
@@ -45,6 +40,7 @@ while True:
         log_line = event_time.strftime("%b %d %T") + " " + server_host + " rds: " + operation + " " + username + " " + host + " " + database + "\n"
         print("Timestamp: " + str(timestamp))
         print(log_line)
+
         try:
             with  open(log_file, 'a') as f:
                 f.write(log_line)
@@ -56,18 +52,18 @@ while True:
             #     f.write(last_event)
             f.close()
             exit(1)
+
         int_timestamp=int(timestamp)
         if last_event<int_timestamp:
             last_event=int_timestamp
         elif last_event>int_timestamp:
             print("WARNING: last_event > timestamp. It shouldn't happen")
         f.close()
-    if 'startTime' in kwargs:
-        kwargs.pop('startTime')
+
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
-        # if last_event is not None:
-        #     kwargs['startTime']=int(last_event)+1 # that's a tricky part, AWS returns 16 digit timestamp but expect 13 digits
+        if last_event is not None:
+            kwargs['startTime']=int(last_event)+1
         # print('No new log events available. Waiting 5s before next pull')
         time.sleep(5) # no logs, let's wait
