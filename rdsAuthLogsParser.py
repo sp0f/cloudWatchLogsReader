@@ -2,7 +2,7 @@ import boto3
 import datetime
 import time
 from sys import exit
-from os import path
+from os import path, remove
 
 client = boto3.client('logs')
 log_group = "/aws/rds/cluster/dv-mysql-cluster/audit"
@@ -19,9 +19,11 @@ kwargs = {
     'filterPattern': '?FAILED_CONNECT ?CONNECT'
 }
 if (path.exists(last_event_file)):
+    print("Reading last event from lock file")
     tmp = f.readline()
     last_event = tmp[:13]
     kwargs['startTime'] = int(last_event[:13])+1
+    os.remove(last_event_file)
 
 else:
     kwargs['startTime'] = int(now.timestamp()*1000)
@@ -30,6 +32,7 @@ else:
 
 # read logs in infinite loop
 while True:
+    print("Last event: "+str(last_event))
     resp = client.filter_log_events(**kwargs)
     for event in resp['events']:
         # 1536652826127350,dv-mysql,alyjak,192.168.169.108,8426327,0,FAILED_CONNECT,,,1045
@@ -40,7 +43,7 @@ while True:
         try:
             with  open(log_file, 'a') as f:
                 f.write(log_line)
-            # yust a simple sanity check for next log pull
+            # just a simple sanity check for next log pull
             if last_event<timestamp:
                 last_event=timestamp
             else:
