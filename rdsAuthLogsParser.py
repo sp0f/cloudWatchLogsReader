@@ -17,6 +17,7 @@ kwargs = {
     'limit': 10000,
     #'startTime' : None,
     'filterPattern': '?FAILED_CONNECT ?CONNECT',
+    'logStreamNamePrefix': 'dv-mysql.audit.log.'
     #'interleaved': True
 }
 if (path.exists(last_event_file)):
