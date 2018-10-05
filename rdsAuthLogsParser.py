@@ -41,22 +41,21 @@ while True:
         log_line = event_time.strftime("%b %d %T") + " " + server_host + " rds: " + operation + " " + username + " " + host + " " + database + "\n"
         print(log_line)
         try:
-            # with  open(log_file, 'a') as f:
-            #     f.write(log_line)
-            # just a simple sanity check for next log pull
-            if last_event<timestamp:
-                last_event=timestamp
-            else:
-                print('last_event >= timestamp. It shouldn\'t happen')
-            # f.close()
+            with  open(log_file, 'a') as f:
+                f.write(log_line)
         except:
             print("Error while writing data to log. Exiting")
-            # with open(last_event_file,'w') as f_event:
-            #     f.write(last_event)
+            with open(last_event_file,'w') as f_event:
+                f.write(last_event)
             exit(1)
+        # just a simple sanity check for next log pull ... yes i know they'r strings
+        if last_event<timestamp:
+            last_event=timestamp
+        elif last_event > timestamp:
+            print('last_event >= timestamp. It shouldn\'t happen')
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
-        kwargs['startTime']=int(last_event)+1 # that's a tricky part, AWS returns 16 digit timestamp but expect 13 digits
+        kwargs['startTime']=int(last_event)+1
         print('No new log events available. Waiting 5s before next pull')
         time.sleep(5) # no logs, let's wait
