@@ -48,9 +48,10 @@ while True:
                 f.write(log_line)
 
             # just a simple sanity check for next log pull
-            if last_event<timestamp:
-                last_event=timestamp
-            elif last_event>timestamp:
+            int_timestamp=int(timestamp)
+            if last_event<int_timestamp:
+                last_event=int_timestamp
+            elif last_event>int_timestamp:
                 print("WARNING: last_event > timestamp. It shouldn't happen")
             f.close()
         except:
