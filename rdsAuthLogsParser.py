@@ -48,19 +48,18 @@ while True:
                 f.write(log_line)
 
             # just a simple sanity check for next log pull
-            int_timestamp=int(timestamp)
-            if last_event<int_timestamp:
-                last_event=int_timestamp
-            elif last_event>int_timestamp:
-                print("WARNING: last_event > timestamp. It shouldn't happen")
-            f.close()
         except:
             print("ERROR: can't write data to log file. Exiting")
             # with open(last_event_file,'w') as f_event:
             #     f.write(last_event)
-            raise
             f.close()
             exit(1)
+        int_timestamp=int(timestamp)
+        if last_event<int_timestamp:
+            last_event=int_timestamp
+        elif last_event>int_timestamp:
+            print("WARNING: last_event > timestamp. It shouldn't happen")
+        f.close()
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
