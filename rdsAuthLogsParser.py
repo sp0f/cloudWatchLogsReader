@@ -16,7 +16,8 @@ kwargs = {
     'logGroupName': log_group,
     'limit': 10000,
     'startTime' : None,
-    'filterPattern': '?FAILED_CONNECT ?CONNECT'
+    'filterPattern': '?FAILED_CONNECT ?CONNECT',
+    'interleaved': True
 }
 if (path.exists(last_event_file)):
     print("Reading last event from lock file")
