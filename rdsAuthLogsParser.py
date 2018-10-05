@@ -12,19 +12,20 @@ last_event_file = '/var/run/rdsAuthLogParser.lock'
 now=datetime.datetime.now(datetime.timezone.utc)
 
 
-if (path.exists(last_event_file)):
-    tmp=f.readline()
-    last_event=int(tmp[:13])
-
-else:
-    last_event=int(now.timestamp()*1000)
-
 kwargs = {
     'logGroupName': log_group,
     'limit': 10000,
-    'startTime' : last_event,
+    'startTime' : None,
     'filterPattern': '?FAILED_CONNECT ?CONNECT'
 }
+if (path.exists(last_event_file)):
+    tmp = f.readline()
+    last_event = tmp[:13]
+    kwargs['startTime'] = int(last_event[:13])+1
+
+else:
+    kwargs['startTime'] = int(now.timestamp()*1000)
+
 
 # read logs in infinite loop
 while True:
