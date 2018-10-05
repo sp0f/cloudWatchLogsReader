@@ -21,12 +21,13 @@ kwargs = {
 if (path.exists(last_event_file)):
     print("Reading last event from lock file")
     tmp = f.readline()
-    last_event = tmp[:13]
-    kwargs['startTime'] = int(last_event[:13])+1
+    last_event = tmp
+    # kwargs['startTime'] = int(last_event[:13])+1
+    kwargs['startTime'] = last_event
     os.remove(last_event_file)
 
 else:
-    kwargs['startTime'] = int(now.timestamp()*1000)
+    kwargs['startTime'] = int(now.timestamp()*1000000)
     last_event=str(kwargs['startTime'])
 
 
