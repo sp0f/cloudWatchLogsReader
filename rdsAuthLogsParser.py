@@ -19,7 +19,7 @@ kwargs = {
     'interleaved': True
 }
 
-last_event=int(now.timestamp()*1000000)
+last_event=int(now.timestamp()*1000)
 # if (path.exists(last_event_file)):
 #     print("Reading last event from lock file")
 #     tmp = f.readline()
@@ -32,7 +32,7 @@ last_event=int(now.timestamp()*1000000)
 #     last_event=str(kwargs['startTime'])
 
 kwargs['startTime'] = last_event
-print("Start event timestamp: "+str(last_event))
+print("Start event timestamp: "+str(last_event[:13]))
 
 # read logs in infinite loop
 while True:
