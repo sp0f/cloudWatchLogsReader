@@ -35,9 +35,9 @@ kwargs['startTime'] = last_event
 
 # read logs in infinite loop
 while True:
-    print("Last event: "+str(last_event))
     resp = client.filter_log_events(**kwargs)
     for event in resp['events']:
+        print("Last event: "+str(last_event))
         # 1536652826127350,dv-mysql,alyjak,192.168.169.108,8426327,0,FAILED_CONNECT,,,1045
         timestamp, server_host, username, host, connection_id, query_id, operation, database, obj, retcode  = event['message'].split(",")
         event_time=datetime.datetime.fromtimestamp(int(timestamp)/1000000)
