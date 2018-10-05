@@ -15,16 +15,16 @@ now=datetime.datetime.now(datetime.timezone.utc)
 kwargs = {
     'logGroupName': log_group,
     'limit': 10000,
-    #'startTime' : None,
+    'startTime' : None,
     'filterPattern': '?FAILED_CONNECT ?CONNECT',
-    'logStreamNamePrefix': 'dv-mysql.audit.log.'
-    #'interleaved': True
+    'logStreamNamePrefix': 'dv-mysql.audit.log',
+    'interleaved': True
 }
 if (path.exists(last_event_file)):
     print("Reading last event from lock file")
     tmp = f.readline()
     last_event = tmp
-    # kwargs['startTime'] = int(last_event[:13])+1
+    kwargs['startTime'] = int(last_event[:13])+1
     kwargs['startTime'] = last_event
     os.remove(last_event_file)
 
@@ -60,7 +60,7 @@ while True:
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
-        # if last_event is not None:
-        #     kwargs['startTime']=int(last_event[:13])+1 # that's a tricky part, AWS returns 16 digit timestamp but expect 13 digits
+        if last_event is not None:
+            kwargs['startTime']=int(last_event[:13])+1 # that's a tricky part, AWS returns 16 digit timestamp but expect 13 digits
         print('No new log events available. Waiting 5s before next pull')
         time.sleep(5) # no logs, let's wait
