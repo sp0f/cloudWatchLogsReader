@@ -1,22 +1,29 @@
 import boto3
 import datetime
 import time
+from os import exit, path
 
 client = boto3.client('logs')
 log_group = "/aws/rds/cluster/dv-mysql-cluster/audit"
 log_file = '/var/log/rds-dv-mysql.log'
+last_event_file = '/var/run/rdsAuthLogParser.lock'
 
 now=datetime.datetime.now(datetime.timezone.utc)
+
+
+if (path.exists(last_event_file)):
+    tmp=f.readline()
+    last_event=int(tmp[:13])
+
+else:
+    last_event=int(now.timestamp()*1000)
 
 kwargs = {
     'logGroupName': log_group,
     'limit': 10000,
-    'startTime' : int(now.timestamp()*1000),
+    'startTime' : last_event,
     'filterPattern': '?FAILED_CONNECT ?CONNECT'
-    #'filterPattern': 'CONNECT' # match CONNECT, DISCONNECT and FAILED_CONNECT
 }
-
-last_event=None
 
 # read logs in infinite loop
 while True:
@@ -26,14 +33,18 @@ while True:
         timestamp, server_host, username, host, connection_id, query_id, operation, database, obj, retcode  = event['message'].split(",")
         event_time=datetime.datetime.fromtimestamp(int(timestamp)/1000000)
         log_line = event_time.strftime("%b %d %T") + " " + server_host + " rds: " + operation + " " + username + " " + host + " " + database + "\n"
-        with  open(log_file, 'a') as f:
-            f.write(log_line)
-        # if no more logs let's start next loop from date of last event
-        if last_event is None:
-            last_event = timestamp
-        elif last_event<timestamp:
-            last_event=timestamp
-        f.close()
+        try:
+            with  open(log_file, 'a') as f:
+                f.write(log_line)
+            # yust a simple sanity check for next log pull
+            if last_event<timestamp:
+                last_event=timestamp
+            f.close()
+        except:
+            print("Error while writing data to log. Exiting")
+            with open(last_event_file,'w') as f_event:
+                f.write(last_event)
+            exit(1)
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
