@@ -1,7 +1,8 @@
 import boto3
 import datetime
 import time
-from os import exit, path
+from sys import exit
+from os import path
 
 client = boto3.client('logs')
 log_group = "/aws/rds/cluster/dv-mysql-cluster/audit"
