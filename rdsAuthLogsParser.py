@@ -19,7 +19,7 @@ kwargs = {
     'interleaved': True
 }
 
-last_event=int(now.timestamp()*1000000)
+last_event=int(now.timestamp()*1000)
 # if (path.exists(last_event_file)):
 #     print("Reading last event from lock file")
 #     tmp = f.readline()
@@ -31,13 +31,12 @@ last_event=int(now.timestamp()*1000000)
 #     kwargs['startTime'] = int(now.timestamp()*1000000)
 #     last_event=str(kwargs['startTime'])
 
-print("Start event timestamp: "+str(last_event))
 kwargs['startTime'] = last_event
-resp = client.filter_log_events(**kwargs)
-kwargs.pop('startTime')
+print("Start event timestamp: "+str(last_event))
 
 # read logs in infinite loop
 while True:
+    resp = client.filter_log_events(**kwargs)
     for event in resp['events']:
         print("Last event: "+str(last_event))
         # 1536652826127350,dv-mysql,alyjak,192.168.169.108,8426327,0,FAILED_CONNECT,,,1045
@@ -63,6 +62,8 @@ while True:
         elif last_event>int_timestamp:
             print("WARNING: last_event > timestamp. It shouldn't happen")
         f.close()
+    if 'startTime' in kwargs:
+        kwargs.pop('startTime')
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
@@ -70,4 +71,3 @@ while True:
         #     kwargs['startTime']=int(last_event)+1 # that's a tricky part, AWS returns 16 digit timestamp but expect 13 digits
         # print('No new log events available. Waiting 5s before next pull')
         time.sleep(5) # no logs, let's wait
-        resp = client.filter_log_events(**kwargs)
