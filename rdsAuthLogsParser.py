@@ -31,6 +31,7 @@ last_event=int(now.timestamp()*1000000)
 #     kwargs['startTime'] = int(now.timestamp()*1000000)
 #     last_event=str(kwargs['startTime'])
 
+kwargs['startTime'] = last_event
 
 # read logs in infinite loop
 while True:
