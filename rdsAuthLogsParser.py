@@ -40,7 +40,7 @@ while True:
         event_time=datetime.datetime.fromtimestamp(int(timestamp)/1000000)
         # print("Timestamp: "+str(timestamp))
         log_line = event_time.strftime("%b %d %T") + " " + server_host + " rds: " + operation + " " + username + " " + host + " " + database + "\n"
-        print(log_line)
+        # print(log_line)
         try:
             with  open(log_file, 'a') as f:
                 f.write(log_line)
@@ -58,5 +58,5 @@ while True:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
         kwargs['startTime'] = int(last_event[:13]) + 1  # that's a tricky part, AWS returns 16 digit timestamp but expect 13 digits
-        print('INFO: no new events available. Waiting 5s before next pull')
+        # print('INFO: no new events available. Waiting 5s before next pull')
         time.sleep(5) # no logs, let's wait
