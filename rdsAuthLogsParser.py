@@ -26,7 +26,7 @@ if (path.exists(last_event_file)):
     os.remove(last_event_file)
 
 else:
-    kwargs['startTime'] = int(now.timestamp()*1000000)
+    kwargs['startTime'] = int(now.timestamp()*1000)
     last_event=str(kwargs['startTime'])
 
 
@@ -56,6 +56,6 @@ while True:
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
-        kwargs['startTime']=int(last_event)+1
+        kwargs['startTime'] = int(last_event[:13]) + 1  # that's a tricky part, AWS returns 16 digit timestamp but expect 13 digits
         print('No new log events available. Waiting 5s before next pull')
         time.sleep(5) # no logs, let's wait
