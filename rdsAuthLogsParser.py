@@ -6,7 +6,7 @@ from os import path, remove
 
 client = boto3.client('logs')
 log_group = "/aws/rds/cluster/dv-mysql-cluster/audit"
-log_file = '/var/log/rds-dv-mysql.log'
+log_file = '/var/ossec/logs/rds/rds-dv-mysql.log'
 last_event_file = '/var/run/rdsAuthLogParser.lock'
 
 now=datetime.datetime.now(datetime.timezone.utc)
