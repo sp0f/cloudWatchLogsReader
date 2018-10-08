@@ -53,7 +53,7 @@ while True:
         if last_event<timestamp:
             last_event=timestamp
         elif last_event > timestamp:
-            print("WARNING: last_event >= timestamp. It shouldn't happen")
+            print("WARNING: last_event >= timestamp ["+log_line+"]. It shouldn't happen!")
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
