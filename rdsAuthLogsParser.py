@@ -54,6 +54,8 @@ while True:
             last_event=timestamp
         elif last_event > timestamp:
             print("WARNING: last_event >= timestamp ["+log_line.rstrip()+"]. Restarting!")
+            with open(last_event_file,'w') as f_event:
+                f_event.write(last_event)
             exit(1)
     try:
         kwargs['nextToken'] = resp['nextToken']
