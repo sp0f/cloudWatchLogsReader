@@ -43,15 +43,7 @@ while True:
         event_time=datetime.datetime.fromtimestamp(int(timestamp)/1000000)
         # print("Timestamp: "+str(timestamp))
         log_line = event_time.strftime("%b %d %T") + " " + server_host + " rds: " + operation + " " + username + " " + host + " " + database + "\n"
-        # print(log_line)
-        try:
-            with  open(log_file, 'a') as f:
-                f.write(log_line)
-        except:
-            print("ERROR: Can't write to log file. Exiting")
-            with open(last_event_file,'w') as f_event:
-                f_event.write(last_event)
-            exit(1)
+
         # just a simple sanity check for next log pull ... yes i know they'r strings
         if last_event<timestamp:
             last_event=timestamp
