@@ -27,7 +27,7 @@ if (path.exists(last_event_file)):
         last_event = f_event.readline()
     if last_event:
         kwargs['startTime'] = int(last_event)+1
-        os.remove(last_event_file)
+        remove(last_event_file)
 
 elif not last_event:
     kwargs['startTime'] = int(now.timestamp()*1000)
@@ -55,11 +55,19 @@ while True:
         # just a simple sanity check for next log pull ... yes i know they'r strings
         if last_event<timestamp:
             last_event=timestamp
+            try:
+                with  open(log_file, 'a') as f:
+                    f.write(log_line)
+            except:
+                print("ERROR: Can't write to log file. Exiting")
+                with open(last_event_file,'w') as f_event:
+                    f_event.write(last_event)
+                exit(1)
         elif last_event > timestamp:
             print("WARNING: last_event >= timestamp ["+log_line.rstrip()+"]. Restarting!")
-            with open(last_event_file,'w') as f_event:
-                f_event.write(last_event)
-            exit(1)
+            # with open(last_event_file,'w') as f_event:
+            #     f_event.write(last_event)
+            # exit(1)
     try:
         kwargs['nextToken'] = resp['nextToken']
     except KeyError:
