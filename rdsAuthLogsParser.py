@@ -21,7 +21,8 @@ kwargs = {
 # if last run exited with errors, start when it ends
 if (path.exists(last_event_file)):
     print("Reading last event from lock file")
-    tmp = f.readline()
+    with open(last_event_file, 'w') as f_event:
+        tmp = f_event.readline()
     last_event = tmp
     kwargs['startTime'] = int(last_event)+1
     os.remove(last_event_file)
