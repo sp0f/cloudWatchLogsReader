@@ -64,7 +64,7 @@ while True:
                     f_event.write(last_event)
                 exit(1)
         elif last_event > timestamp:
-            print("WARNING: last_event >= timestamp ["+log_line.rstrip()+"]. Restarting!")
+            print("WARNING: last_event >= timestamp ["+log_line.rstrip()+"]. Skipping!")
             # with open(last_event_file,'w') as f_event:
             #     f_event.write(last_event)
             # exit(1)
