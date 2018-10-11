@@ -25,8 +25,9 @@ if (path.exists(last_event_file)):
     print("Reading last event from lock file")
     with open(last_event_file, 'r') as f_event:
         last_event = f_event.readline()
-    kwargs['startTime'] = int(last_event)+1
-    os.remove(last_event_file)
+    if last_event:
+        kwargs['startTime'] = int(last_event)+1
+        os.remove(last_event_file)
 
 elif not last_event:
     kwargs['startTime'] = int(now.timestamp()*1000)
